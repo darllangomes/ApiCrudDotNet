@@ -11,8 +11,29 @@ namespace ApiCrud.Repositories
 
         public async Task Add(Produto produto)
         {
-            _produtos.Add(produto);
-            await Task.CompletedTask;
+            if(produto == null){
+                throw new ArgumentNullException(nameof(produto), "O produto não pode ser nulo.");
+            }
+            if(produto.Id <= 0){
+                throw new ArgumentException("O ID do produto deve ser maior que zero.", nameof(produto.Id));
+            }
+            if(string.IsNullOrWhiteSpace(produto.Nome){
+                throw new ArgumentException("Nome do produto não pode ser nulo ou vazio.", nameof(produto.Nome));
+            }
+            if(produto.Preco < 0){
+                throw new ArgumentException("O preço do produto não pode ser negativo.", nameof(produto.Preco));
+            }
+            if(_produtos.Any(p=>p.Id == produto.Id)){
+                throw new InvalidOperationException($"Já existe um produto com o ID {produto.Id}");
+            }
+
+            try{
+                _produtos.Add(produto);
+                await Task.CompletedTask;
+            }catch(Exception ex){
+                throw new Exception("Erro ao adicionar produto.", ex);
+            }
+
         }
 
         public async Task Delete(int id)
