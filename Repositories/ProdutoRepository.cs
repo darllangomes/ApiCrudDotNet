@@ -37,9 +37,34 @@ namespace ApiCrud.Repositories
 
         public async Task<Produto> GetById(int id)
         {
-            var produto = _produtos.FirstOrDefault(p => p.Id == id);
 
-            return await Task.FromResult(produto);
+            if (id <= 0)
+            {
+                throw new ArgumentException("ID inválido. ID deve ser maior que zero.");
+
+            }
+
+            try
+            {
+                var produto = _produtos.SingleOrDefault(p => p.Id == id);
+                if (produto == null)
+                {
+                    throw new KeyNotFoundException($"Produto com ID ${id} não encontrado.");
+                }
+
+                return await Task.FromResult(produto);
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Mais de um produto com o mesmo ID encontrado.", ex);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocorreu um erro inesperado.", ex);
+            }
+
 
         }
 
