@@ -98,9 +98,33 @@ namespace ApiCrud.Repositories
             }
         }
 
-        public Task Update(Produto produto)
+        public async Task Update(Produto produto)
         {
-            throw new NotImplementedException();
+            if(produto == null){
+                throw new ArgumentNullException(nameof(produto), "O produto não pode ser nulo.");
+            }
+            if(produto.Id <= 0){
+                throw new ArgumentException("O ID do produto deve ser maior que zero.", nameof(produto.Id));
+            }
+            if(string.IsNullOrWhiteSpace(produto.Nome)){
+                throw new ArgumentException("O nome do produto não pode ser nulo ou vazio.", nameof(produto.Nome));
+            }
+            if(produto.Preco < 0){
+                throw new ArgumentException("O preço do produto não pode ser negativo.", nameof(produto.Preco));
+            }
+
+             var produtoExistente = _produtos.FirstOrDefault( p => p.Id == produto.Id);
+             if(produtoExistente == null){
+                throw new KeyNotFoundException($"Produto com ID {produto.Id} não encontrado.");
+             }
+
+             try{
+                produtoExistente.Nome = produto.Nome;
+                produtoExistente.Preco = produto.Preco;
+                await Task.CompletedTask;
+             }catch(Exception ex){
+                throw new Exception("Erro ao atualizar o produto.", ex);
+             }
         }
     }
 }
