@@ -39,11 +39,12 @@ namespace ApiCrud.Repositories
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
-                    return await Task.FromResult(produtosPaginados.AsReadOnly());
+                return await Task.FromResult(produtosPaginados.AsReadOnly());
             }
-            catch (Exception ex) {
-                throw new Exception($"Erro ao obter produtos");
-             }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao obter produtos: {ex.Message}", ex);
+            }
         }
 
         public async Task<Produto> GetById(int id)
