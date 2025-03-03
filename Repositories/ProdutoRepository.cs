@@ -19,9 +19,14 @@ namespace ApiCrud.Repositories
         }
 
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var produto = _produtos.FirstOrDefault(p => p.Id == id);
+            if (produto != null)
+            {
+                _produtos.Remove(produto);
+            }
+            await Task.CompletedTask;
         }
 
         public async Task<IEnumerable<Produto>> GetAll()
@@ -30,9 +35,12 @@ namespace ApiCrud.Repositories
 
         }
 
-        public Task<Produto> GetById(int id)
+        public async Task<Produto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var produto = _produtos.FirstOrDefault(p => p.Id == id);
+
+            return await Task.FromResult(produto);
+
         }
 
         public Task Update(Produto produto)
