@@ -1,49 +1,74 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiCrud.Data;
 using ApiCrud.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiCrud.Repositories
 {
     public class ProdutoRepository : IProdutoRepository
     {
-        private readonly List<Produto> _produtos = new List<Produto>();
+        // private readonly List<Produto> _produtos = new List<Produto>();
+
+        private readonly AppDbContext _context;
+
+        public ProdutoRepository(AppDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task Add(Produto produto)
         {
-            if(produto == null){
+            if (produto == null)
+            {
                 throw new ArgumentNullException(nameof(produto), "O produto não pode ser nulo.");
             }
-            if(produto.Id <= 0){
-                throw new ArgumentException("O ID do produto deve ser maior que zero.", nameof(produto.Id));
+            if (produto.Id <= 0)
+            {
+                throw new ArgumentException(
+                    "O ID do produto deve ser maior que zero.",
+                    nameof(produto.Id)
+                );
             }
-            if(string.IsNullOrWhiteSpace(produto.Nome){
-                throw new ArgumentException("Nome do produto não pode ser nulo ou vazio.", nameof(produto.Nome));
+            if (string.IsNullOrWhiteSpace(produto.Nome))
+            {
+                throw new ArgumentException(
+                    "Nome do produto não pode ser nulo ou vazio.",
+                    nameof(produto.Nome)
+                );
             }
-            if(produto.Preco < 0){
-                throw new ArgumentException("O preço do produto não pode ser negativo.", nameof(produto.Preco));
+            if (produto.Preco < 0)
+            {
+                throw new ArgumentException(
+                    "O preço do produto não pode ser negativo.",
+                    nameof(produto.Preco)
+                );
             }
-            if(_produtos.Any(p=>p.Id == produto.Id)){
+            if (await _context.Produtos.AnyAsync(p => p.Id == produto.Id))
+            {
                 throw new InvalidOperationException($"Já existe um produto com o ID {produto.Id}");
             }
 
-            try{
-                _produtos.Add(produto);
-                await Task.CompletedTask;
-            }catch(Exception ex){
+            try
+            {
+                await _context.Produtos.AddAsync(produto);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
                 throw new Exception("Erro ao adicionar produto.", ex);
             }
-
         }
 
         public async Task Delete(int id)
         {
-            var produto = _produtos.FirstOrDefault(p => p.Id == id);
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
             if (produto != null)
             {
-                _produtos.Remove(produto);
+                _context.Produtos.Remove(produto);
             }
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Produto>> GetAll(int pageNumber = 1, int pageSize = 10)
@@ -56,11 +81,11 @@ namespace ApiCrud.Repositories
                         "Número da página e tamanho da página devem ser maiores que zero."
                     );
                 }
-                var produtosPaginados = _produtos
-                    .Skip((pageNumber - 1) * pageSize)
+                var produtosPaginados = await _context
+                    .Produtos.Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
-                    .ToList();
-                return await Task.FromResult(produtosPaginados.AsReadOnly());
+                    .ToListAsync();
+                return produtosPaginados;
             }
             catch (Exception ex)
             {
@@ -77,7 +102,7 @@ namespace ApiCrud.Repositories
 
             try
             {
-                var produto = _produtos.SingleOrDefault(p => p.Id == id);
+                var produto = await _context.Produtos.SingleOrDefaultAsync(p => p.Id == id);
                 if (produto == null)
                 {
                     throw new KeyNotFoundException($"Produto com ID ${id} não encontrado.");
@@ -100,31 +125,50 @@ namespace ApiCrud.Repositories
 
         public async Task Update(Produto produto)
         {
-            if(produto == null){
+            if (produto == null)
+            {
                 throw new ArgumentNullException(nameof(produto), "O produto não pode ser nulo.");
             }
-            if(produto.Id <= 0){
-                throw new ArgumentException("O ID do produto deve ser maior que zero.", nameof(produto.Id));
+            if (produto.Id <= 0)
+            {
+                throw new ArgumentException(
+                    "O ID do produto deve ser maior que zero.",
+                    nameof(produto.Id)
+                );
             }
-            if(string.IsNullOrWhiteSpace(produto.Nome)){
-                throw new ArgumentException("O nome do produto não pode ser nulo ou vazio.", nameof(produto.Nome));
+            if (string.IsNullOrWhiteSpace(produto.Nome))
+            {
+                throw new ArgumentException(
+                    "O nome do produto não pode ser nulo ou vazio.",
+                    nameof(produto.Nome)
+                );
             }
-            if(produto.Preco < 0){
-                throw new ArgumentException("O preço do produto não pode ser negativo.", nameof(produto.Preco));
+            if (produto.Preco < 0)
+            {
+                throw new ArgumentException(
+                    "O preço do produto não pode ser negativo.",
+                    nameof(produto.Preco)
+                );
             }
 
-             var produtoExistente = _produtos.FirstOrDefault( p => p.Id == produto.Id);
-             if(produtoExistente == null){
+            var produtoExistente = await _context.Produtos.FirstOrDefaultAsync(p =>
+                p.Id == produto.Id
+            );
+            if (produtoExistente == null)
+            {
                 throw new KeyNotFoundException($"Produto com ID {produto.Id} não encontrado.");
-             }
+            }
 
-             try{
+            try
+            {
                 produtoExistente.Nome = produto.Nome;
                 produtoExistente.Preco = produto.Preco;
-                await Task.CompletedTask;
-             }catch(Exception ex){
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
                 throw new Exception("Erro ao atualizar o produto.", ex);
-             }
+            }
         }
     }
 }
