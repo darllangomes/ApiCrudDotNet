@@ -1,0 +1,118 @@
+# Ignora arquivos de configuração local do Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignora pastas de build e dependências
+[Bb]in/
+[Oo]bj/
+[Tt]est[Rr]esults/
+[Pp]ackages/
+.vs/
+.idea/
+.vscode/
+
+# Ignora arquivos de log e cache
+*.log
+*.cache
+*.nupkg
+
+# Ignora arquivos de configuração local
+appsettings.Development.json
+appsettings.Local.json
+
+# Ignora arquivos de banco de dados local
+*.mdf
+*.ldf
+
+# Ignora arquivos de publish
+publish/
+
+# Ignora arquivos do Rider (JetBrains IDE)
+.idea/
+
+# Ignora arquivos do Docker
+docker-compose.override.yml
+docker-compose.dcproj
+
+# Ignora arquivos do Node.js (se houver)
+node_modules/
+npm-debug.log
+
+# Ignora arquivos do Azure Functions
+func/
+
+# Ignora arquivos do Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Ignora arquivos do Rider (JetBrains IDE)
+.idea/
+*.sln.iml
+
+# Ignora arquivos do ReSharper (JetBrains)
+_ReSharper.*
+*.ReSharper
+
+# Ignora arquivos do NCrunch
+*.ncrunch*
+*.ncrunchsolution
+*.ncrunchproject
+
+# Ignora arquivos do StyleCop
+StyleCop.Cache
+
+# Ignora arquivos do Cake
+tools/
+!.tools/packages.config
+
+# Ignora arquivos do MSTest
+TestResults/
+*.trx
+*.VisualState.xml
+
+# Ignora arquivos do SQL Server
+*.mdf
+*.ldf
+*.sdf
+
+# Ignora arquivos do Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Ignora arquivos do Rider (JetBrains IDE)
+.idea/
+*.sln.iml
+
+# Ignora arquivos do ReSharper (JetBrains)
+_ReSharper.*
+*.ReSharper
+
+# Ignora arquivos do NCrunch
+*.ncrunch*
+*.ncrunchsolution
+*.ncrunchproject
+
+# Ignora arquivos do StyleCop
+StyleCop.Cache
+
+# Ignora arquivos do Cake
+tools/
+!.tools/packages.config
+
+# Ignora arquivos do MSTest
+TestResults/
+*.trx
+*.VisualState.xml
+
+# Ignora arquivos do SQL Server
+*.mdf
+*.ldf
+*.sdf

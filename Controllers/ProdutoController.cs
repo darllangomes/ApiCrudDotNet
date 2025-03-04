@@ -1,12 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
 using ApiCrud.Models;
 using ApiCrud.Repositories;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ApiCrud.Controllers
 {
     [ApiController]
-    [Microsoft.AspNetCore.Components.Route("api/[controller]")]
+    [Route("api/[controller]")]
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -41,14 +42,14 @@ namespace ApiCrud.Controllers
             return CreatedAtAction(nameof(GetById), new { id = produto.Id }, produto);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<ActionResult> Update(Produto produto)
         {
             await _produtoRepository.Update(produto);
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             if (id == null || id <= 0)
