@@ -24,13 +24,6 @@ namespace ApiCrud.Repositories
             {
                 throw new ArgumentNullException(nameof(produto), "O produto não pode ser nulo.");
             }
-            if (produto.Id <= 0)
-            {
-                throw new ArgumentException(
-                    "O ID do produto deve ser maior que zero.",
-                    nameof(produto.Id)
-                );
-            }
             if (string.IsNullOrWhiteSpace(produto.Nome))
             {
                 throw new ArgumentException(
@@ -44,10 +37,6 @@ namespace ApiCrud.Repositories
                     "O preço do produto não pode ser negativo.",
                     nameof(produto.Preco)
                 );
-            }
-            if (await _context.Produtos.AnyAsync(p => p.Id == produto.Id))
-            {
-                throw new InvalidOperationException($"Já existe um produto com o ID {produto.Id}");
             }
 
             try

@@ -18,9 +18,9 @@ namespace ApiCrud.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Produto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var produtos = await _produtoRepository.GetAll(pageNumber: 1, pageSize: 10);
+            var produtos = await _produtoRepository.GetAll(pageNumber, pageSize);
             return Ok(produtos);
         }
 
@@ -43,8 +43,12 @@ namespace ApiCrud.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Produto produto)
+        public async Task<ActionResult> Update(int id, Produto produto)
         {
+            if (id != produto.Id)
+            {
+                return BadRequest("O ID da rota não corresponde ao ID do produto.");
+            }
             await _produtoRepository.Update(produto);
             return NoContent();
         }

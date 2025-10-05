@@ -17,8 +17,9 @@ namespace ApiCrud.Data
             modelBuilder.Entity<Produto>(entity =>
             {
                 entity.HasKey(p => p.Id);
+                entity.Property(p => p.Id).ValueGeneratedOnAdd();
                 entity.Property(p => p.Nome).IsRequired().HasMaxLength(30);
-                entity.Property(p => p.Preco).HasColumnName("numeric(18,2)");
+                entity.Property(p => p.Preco).HasColumnType("decimal(18,2)");
             });
         }
     }
