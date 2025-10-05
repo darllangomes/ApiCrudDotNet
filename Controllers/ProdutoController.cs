@@ -56,7 +56,7 @@ namespace ApiCrud.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            if (id == null || id <= 0)
+            if (id <= 0)
             {
                 return BadRequest();
             }
